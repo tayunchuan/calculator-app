@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>计算器</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">计算器</div>
+    <nav class="nav" id="nav" aria-label="视图切换">
+      <button type="button" class="nav-item" data-view="calc">计算</button>
+      <button type="button" class="nav-item" data-view="convert">换算</button>
+      <button type="button" class="nav-item" data-view="date">日期</button>
+      <button type="button" class="nav-item" data-view="history">历史</button>
+    </nav>
+    <button type="button" class="ghost-btn" id="settingsToggle" aria-haspopup="dialog">设置</button>
+  </header>
+
+  <div class="notice" id="notice" role="status" hidden></div>
+
+  <main class="workspace">
+    <section class="view" id="view-calc" data-view="calc">
+      <div class="calc-wrap">
+        <div class="card calc-card">
+          <div class="calc-display">
+            <div class="calc-expr" id="calcExpr"></div>
+            <div class="calc-main" id="calcMain">0</div>
+          </div>
+          <div class="keypad" id="keypad">
+            <button type="button" class="key key-fn" data-key="clear">C</button>
+            <button type="button" class="key key-fn" data-key="back">⌫</button>
+            <button type="button" class="key key-fn" data-key="percent">％</button>
+            <button type="button" class="key key-op" data-key="op" data-op="/">÷</button>
+
+            <button type="button" class="key" data-key="digit" data-digit="7">7</button>
+            <button type="button" class="key" data-key="digit" data-digit="8">8</button>
+            <button type="button" class="key" data-key="digit" data-digit="9">9</button>
+            <button type="button" class="key key-op" data-key="op" data-op="*">×</button>
+
+            <button type="button" class="key" data-key="digit" data-digit="4">4</button>
+            <button type="button" class="key" data-key="digit" data-digit="5">5</button>
+            <button type="button" class="key" data-key="digit" data-digit="6">6</button>
+            <button type="button" class="key key-op" data-key="op" data-op="-">−</button>
+
+            <button type="button" class="key" data-key="digit" data-digit="1">1</button>
+            <button type="button" class="key" data-key="digit" data-digit="2">2</button>
+            <button type="button" class="key" data-key="digit" data-digit="3">3</button>
+            <button type="button" class="key key-op" data-key="op" data-op="+">+</button>
+
+            <button type="button" class="key key-fn" data-key="sign">±</button>
+            <button type="button" class="key" data-key="digit" data-digit="0">0</button>
+            <button type="button" class="key" data-key="dot">.</button>
+            <button type="button" class="key key-equals" data-key="equals">=</button>
+          </div>
+          <p class="calc-hint tiny">支持键盘输入：数字键、+ - * /、回车等于、退格删除、Esc 清空</p>
+        </div>
+      </div>
+    </section>
+    <section class="view" id="view-convert" data-view="convert" hidden>
+      <div class="tabs" id="convertTabs" role="tablist">
+        <button type="button" class="tab" data-category="length" role="tab">长度</button>
+        <button type="button" class="tab" data-category="weight" role="tab">重量</button>
+        <button type="button" class="tab" data-category="temperature" role="tab">温度</button>
+        <button type="button" class="tab" data-category="area" role="tab">面积</button>
+        <button type="button" class="tab" data-category="volume" role="tab">体积</button>
+      </div>
+
+      <div class="card">
+        <div class="convert-grid">
+          <div class="unit-box">
+            <select class="field unit-select" id="convertFromUnit" aria-label="源单位"></select>
+            <input class="convert-value" id="convertLeft" type="text" inputmode="decimal" autocomplete="off" aria-label="源数值">
+          </div>
+          <button type="button" class="swap-btn" id="convertSwap" title="互换单位" aria-label="互换单位">⇅</button>
+          <div class="unit-box">
+            <select class="field unit-select" id="convertToUnit" aria-label="目标单位"></select>
+            <input class="convert-value" id="convertRight" type="text" inputmode="decimal" autocomplete="off" aria-label="目标数值">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <button type="button" class="collapse-head" id="convertAllToggle" aria-expanded="true">
+          <span class="caret">▾</span>该类别全部单位对照
+        </button>
+        <div class="unit-all" id="convertAllList"></div>
+      </div>
+    </section>
+    <section class="view" id="view-date" data-view="date" hidden>
+      <div class="card">
+        <h3 class="card-title">日期相差与倒计时</h3>
+        <div class="date-row">
+          <input class="field date-input" id="diffStart" type="date" aria-label="起始日期">
+          <span class="date-arrow">→</span>
+          <input class="field date-input" id="diffEnd" type="date" aria-label="结束日期">
+        </div>
+        <div class="result-list" id="diffResult"></div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">日期加减推演</h3>
+        <div class="date-row">
+          <input class="field date-input" id="shiftStart" type="date" aria-label="起始日期">
+          <select class="field" id="shiftDir" aria-label="方向">
+            <option value="1">之后</option>
+            <option value="-1">之前</option>
+          </select>
+          <input class="field date-input amount" id="shiftAmount" type="text" inputmode="numeric" value="30" aria-label="数值">
+          <select class="field" id="shiftUnit" aria-label="单位">
+            <option value="day">天</option>
+            <option value="week">周</option>
+            <option value="month">月</option>
+            <option value="year">年</option>
+          </select>
+        </div>
+        <div class="result-list" id="shiftResult"></div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">年龄与纪念日</h3>
+        <div class="date-row">
+          <span class="date-label">出生日期 / 纪念日</span>
+          <input class="field date-input" id="ageBirth" type="date" aria-label="出生日期">
+        </div>
+        <div class="result-list" id="ageResult"></div>
+      </div>
+    </section>
+    <section class="view" id="view-history" data-view="history" hidden>
+      <div class="card">
+        <div class="history-toolbar">
+          <input class="field history-search" id="historySearch" type="search" placeholder="搜索记录" aria-label="搜索记录">
+          <div class="seg" id="historyFilter" role="tablist">
+            <button type="button" class="seg-item" data-filter="all" role="tab">全部</button>
+            <button type="button" class="seg-item" data-filter="calc" role="tab">计算</button>
+            <button type="button" class="seg-item" data-filter="convert" role="tab">换算</button>
+            <button type="button" class="seg-item" data-filter="date" role="tab">日期</button>
+          </div>
+          <button type="button" class="btn btn-danger" id="historyClear">清空全部</button>
+        </div>
+        <div class="history-list" id="historyList"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="overlay" id="settingsOverlay" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-label="设置">
+    <div class="panel-head">
+      <h3 class="panel-title">设置</h3>
+      <button type="button" class="ghost-btn" id="settingsClose">关闭</button>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-main">
+        <span class="setting-label">千分位分隔</span>
+        <span class="setting-desc">结果按 1,234 的形式显示</span>
+      </div>
+      <input type="checkbox" id="setThousand" aria-label="千分位分隔">
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-main">
+        <span class="setting-label">历史记录上限</span>
+        <span class="setting-desc">超出后自动淘汰最旧的记录</span>
+      </div>
+      <input class="field setting-num" id="setLimit" type="text" inputmode="numeric" aria-label="历史记录上限">
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-main">
+        <span class="setting-label">当前数据量</span>
+        <span class="setting-desc" id="setCount">已存 0 条记录</span>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h4 class="panel-subtitle">备份与恢复</h4>
+      <p class="tiny">导出的文件只保存在本机，不会上传到任何服务器。清理浏览器数据前请先导出备份。</p>
+      <div class="panel-actions">
+        <button type="button" class="btn" id="backupExport">导出备份</button>
+        <button type="button" class="btn" id="backupImport">导入备份</button>
+        <input type="file" id="backupFile" accept="application/json,.json" hidden>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h4 class="panel-subtitle">清空数据</h4>
+      <div class="panel-actions">
+        <button type="button" class="btn btn-danger" id="settingsClearAll">清空全部数据</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="confirmOverlay" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-label="确认">
+    <p class="dialog-text" id="confirmText"></p>
+    <div class="dialog-actions">
+      <button type="button" class="btn" id="confirmCancel">取消</button>
+      <button type="button" class="btn btn-danger" id="confirmOk">确定</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

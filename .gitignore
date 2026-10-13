@@ -1,0 +1,20 @@
+# 依赖
+node_modules/
+
+# 构建产物（由 npm run package 生成）
+dist/
+
+# 本地工具数据，与项目内容无关
+.workbuddy/
+
+# 编辑器与系统文件
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 日志与临时文件
+*.log
+npm-debug.log*
+*.tmp

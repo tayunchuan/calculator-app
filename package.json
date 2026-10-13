@@ -1,0 +1,17 @@
+{
+  "name": "calculator-app",
+  "version": "1.0.0",
+  "description": "纯前端离线计算器：四则运算、单位换算、日期计算，数据只存在浏览器本地",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "test": "node tests/run-tests.js",
+    "package": "python tools/build-share-package.py"
+  },
+  "engines": {
+    "node": ">=22.22.2"
+  },
+  "devDependencies": {
+    "jsdom": "^30.1.2"
+  }
+}
